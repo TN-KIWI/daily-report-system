@@ -1,0 +1,20 @@
+# Daily Report System Rules
+
+## Goal
+日報をCLIで記録・生成するツールを作る
+
+## Tech
+- Python
+- CLIベース
+- データ保存はJSON
+- 出力はMarkdown（最終的にLogseq形式）
+
+## Principles
+- シンプルに実装する
+- 過剰な抽象化はしない
+- まず動く最小構成を優先する
+- CLIは厳密入力（--section, --project 必須）
+- 将来拡張しやすい構造にする
+
+## Current Task
+addコマンドでJSONに保存する機能を実装する
