@@ -1,6 +1,7 @@
 import argparse
 from report.models import Entry
 from report import storage
+from report import formatter
 
 
 def create_parser():
@@ -41,7 +42,12 @@ def main():
         except Exception as e:
             print(f"failed to save entry: {e}")
     elif args.command == "generate":
-        print("generate command called")
+        try:
+            log_data = storage.load_entries()
+            report_path = formatter.write_daily_report(log_data)
+            print(f"report generated: {report_path}")
+        except Exception as e:
+            print(f"failed to generate report: {e}")
     else:
         parser.print_help()
 
