@@ -1,0 +1,40 @@
+name: Upload Logseq Journal to Dropbox
+
+on:
+  push:
+    branches:
+      - dev
+      - feature/logseq-upload
+
+env:
+  TZ: Asia/Tokyo
+  
+jobs:
+  generate-and-upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Generate report
+        run: python src/main.py generate
+
+      - name: Build today's filename
+        run: echo "filename=$(date +'%Y_%m_%d').md" >> "$GITHUB_ENV"
+
+      - name: Upload journal to Dropbox
+        uses: Lewuathe/dropbox-github-action@v1.0.3
+        with:
+          dropbox-app-key: ${{ secrets.DROPBOX_APP_KEY }}
+          dropbox-app-secret: ${{ secrets.DROPBOX_APP_SECRET }}
+          dropbox-refresh-token: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
+          source-path: reports/${{ env.filename }}
+          # 自分の Dropbox 上の Logseq journals パスに合わせて変更
+          target-path: /logseq/Logseq_graph/journals/${{ env.filename }}
+          write-mode: overwrite
