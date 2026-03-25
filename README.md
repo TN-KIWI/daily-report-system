@@ -32,3 +32,12 @@ python3 src/main.py generate
 - `data/logs/`: 生ログ保存先
 - `reports/`: 生成レポート保存先
 - `tests/`: テストコード
+
+## GitHub Actions（Dropbox連携）
+- `.github/workflows/upload-logseq.yml` は push 時に `python src/main.py generate` を実行し、当日分の `logseq/journals/YYYY_MM_DD.md` を Dropbox にアップロードします。
+- `target-path` は仮で `/journals/` を使っています。自分の Dropbox 上の Logseq journals パスに合わせて変更してください。
+
+## GitHub Secrets
+- `DROPBOX_APP_KEY`
+- `DROPBOX_APP_SECRET`
+- `DROPBOX_REFRESH_TOKEN`
