@@ -31,7 +31,7 @@ jobs:
           dropbox-app-key: ${{ secrets.DROPBOX_APP_KEY }}
           dropbox-app-secret: ${{ secrets.DROPBOX_APP_SECRET }}
           dropbox-refresh-token: ${{ secrets.DROPBOX_REFRESH_TOKEN }}
-          source-path: logseq/Logseq_graph/journals/${{ env.filename }}
+          source-path: reports/${{ env.filename }}
           # 自分の Dropbox 上の Logseq journals パスに合わせて変更
-          target-path: /journals/${{ env.filename }}
+          target-path: /logseq/Logseq_graph/journals/${{ env.filename }}
           write-mode: overwrite
