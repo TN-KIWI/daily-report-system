@@ -1,13 +1,12 @@
 import json
-from datetime import date
 from pathlib import Path
-
+from report.time_utils import today_timezone
 
 LOG_DIR = Path("data/logs")
 
 
 def _get_today_log_path():
-    today = date.today().isoformat()
+    today = today_timezone()
     return LOG_DIR / f"{today}.json", today
 
 

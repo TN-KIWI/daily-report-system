@@ -1,6 +1,5 @@
-from datetime import date
 from pathlib import Path
-
+from report.time_utils import today_timezone
 
 REPORT_DIR = Path("reports")
 SECTION_ORDER = ["done", "issue", "next", "memo"]
@@ -42,7 +41,7 @@ def generate_markdown(entries):
 
 
 def write_daily_report(log_data):
-    report_date = log_data.get("date") or date.today().isoformat()
+    report_date = log_data.get("date") or today_timezone()
     file_name = report_date.replace("-", "_") + ".md"
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)

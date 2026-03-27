@@ -2,6 +2,7 @@ import argparse
 from report.models import Entry
 from report import storage
 from report import formatter
+from report import git_reader
 
 
 def create_parser():
@@ -21,6 +22,9 @@ def create_parser():
     add_parser.add_argument("text", help="Entry text")
 
     subparsers.add_parser("generate", help="Generate a report")
+
+    git_log_parser = subparsers.add_parser("git-log", help="Show today's git commit messages")
+    git_log_parser.add_argument("--repo", required=True, help="Repository path")
     return parser
 
 
@@ -48,6 +52,13 @@ def main():
             print(f"report generated: {report_path}")
         except Exception as e:
             print(f"failed to generate report: {e}")
+    elif args.command == "git-log":
+        try:
+            messages = git_reader.get_today_commit_messages(args.repo)
+            for message in messages:
+                print(message)
+        except Exception as e:
+            print(f"failed to read git log: {e}")
     else:
         parser.print_help()
 
