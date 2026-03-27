@@ -6,7 +6,7 @@ LOG_DIR = Path("data/logs")
 
 
 def _get_today_log_path():
-    today = today_timezone()
+    today = today_timezone().isoformat()
     return LOG_DIR / f"{today}.json", today
 
 

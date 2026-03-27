@@ -1,2 +1,0 @@
-git add .
-cmd /c "chcp 65001 >NUL & git --no-pager diff --staged > staged_diff.txt"

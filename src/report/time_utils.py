@@ -6,4 +6,4 @@ def now():
     return datetime.now(TIMEZONE)
 
 def today_timezone():
-    return now().date().isoformat()
+    return now().date()

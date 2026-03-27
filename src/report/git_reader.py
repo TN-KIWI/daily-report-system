@@ -1,4 +1,4 @@
-from datetime import date, datetime, time
+from datetime import datetime, time
 from pathlib import Path
 import subprocess
 from report.time_utils import today_timezone

@@ -41,7 +41,7 @@ def generate_markdown(entries):
 
 
 def write_daily_report(log_data):
-    report_date = log_data.get("date") or today_timezone()
+    report_date = log_data.get("date") or today_timezone().isoformat()
     file_name = report_date.replace("-", "_") + ".md"
 
     REPORT_DIR.mkdir(parents=True, exist_ok=True)
