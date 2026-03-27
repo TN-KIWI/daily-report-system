@@ -5,3 +5,4 @@ staged_diff.txt
 free.txt
 data/logs/*.json
 .codex/
+config/repos.json

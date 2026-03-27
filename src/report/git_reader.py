@@ -1,7 +1,7 @@
 from datetime import datetime, time
 from pathlib import Path
 import subprocess
-from report.time_utils import today_timezone
+from time_utils import today_timezone
 
 def get_today_commit_messages(repo_path):
     repo = Path(repo_path)

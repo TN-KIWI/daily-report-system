@@ -1,5 +1,5 @@
 from pathlib import Path
-from report.time_utils import today_timezone
+from time_utils import today_timezone
 
 REPORT_DIR = Path("reports")
 SECTION_ORDER = ["done", "issue", "next", "memo"]
