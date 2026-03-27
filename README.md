@@ -58,11 +58,12 @@ py src/main.py add --section next --project api "認証テストを追加"
 py src/main.py add --section memo --project daily-report-system "Dropbox連携を確認"
 ```
 
-## GitHub Actions（Dropbox連携）
-- `.github/workflows/upload-logseq.yml` は push 時に `python src/main.py generate` を実行し、当日分の `logseq/journals/YYYY_MM_DD.md` を Dropbox にアップロードします。
-- `target-path` は仮で `/logseq/Logseq_graph/journals/` を使っています。自分の Dropbox 上の Logseq journals パスに合わせて変更してください。
+## 現在の実行方法（ローカル）
 
-## GitHub Secrets
-- `DROPBOX_APP_KEY`
-- `DROPBOX_APP_SECRET`
-- `DROPBOX_REFRESH_TOKEN`
+1. `add` コマンドで作業内容を記録
+2. `generate` コマンドで日報を生成
+
+```bash
+py src/main.py add --section done --project api "認証処理を修正"
+py src/main.py generate
+```
