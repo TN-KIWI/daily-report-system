@@ -6,3 +6,4 @@ free.txt
 data/logs/*.json
 .codex/
 config/repos.json
+src/test.py
