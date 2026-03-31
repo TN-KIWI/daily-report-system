@@ -1,7 +1,7 @@
 from pathlib import Path
 from report.time_utils import today_timezone
 
-REPORT_DIR = Path("reports")
+REPORT_DIR = Path("C:/Users/TKC/Dropbox/logseq/Logseq_graph/journals")
 SECTION_ORDER = ["done", "issue", "next", "memo"]
 SECTION_LABELS = {
     "done": "今日やったこと",
