@@ -33,9 +33,34 @@ python3 src/main.py generate
 - `reports/`: 生成レポート保存先
 - `tests/`: テストコード
 
+## 現在の運用フロー
+1. `add` コマンドで当日の作業内容を記録します。
+2. `generate` コマンドで当日分の Markdown 日報を生成します。
+3. push をきっかけに GitHub Actions が実行されます。
+4. Actions 内で `python src/main.py generate` を実行し、生成した日報を Dropbox にアップロードします。
+5. Dropbox 上の journal ファイルを Logseq から参照します。
+
+## 現在の入出力
+### 入力
+- `data/logs/YYYY-MM-DD.json`
+- `add` コマンドで追記されます
+
+### 出力
+- `reports/YYYY_MM_DD.md`
+- GitHub Actions ではこのファイルを Dropbox にアップロードします
+- Dropbox 上では `target-path` で指定した journal パスに保存されます
+
+## 日報の追加例
+```bash
+py src/main.py add --section done --project api "認証処理を修正"
+py src/main.py add --section issue --project api "テスト不足"
+py src/main.py add --section next --project api "認証テストを追加"
+py src/main.py add --section memo --project daily-report-system "Dropbox連携を確認"
+```
+
 ## GitHub Actions（Dropbox連携）
 - `.github/workflows/upload-logseq.yml` は push 時に `python src/main.py generate` を実行し、当日分の `logseq/journals/YYYY_MM_DD.md` を Dropbox にアップロードします。
-- `target-path` は仮で `/journals/` を使っています。自分の Dropbox 上の Logseq journals パスに合わせて変更してください。
+- `target-path` は仮で `/logseq/Logseq_graph/journals/` を使っています。自分の Dropbox 上の Logseq journals パスに合わせて変更してください。
 
 ## GitHub Secrets
 - `DROPBOX_APP_KEY`

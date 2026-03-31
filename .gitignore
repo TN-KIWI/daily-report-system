@@ -3,3 +3,4 @@ __pycache__/
 reports/*.md
 staged_diff.txt
 free.txt
+data/logs/*.json
