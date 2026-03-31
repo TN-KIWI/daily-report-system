@@ -1,6 +1,6 @@
 import json
 from pathlib import Path
-from time_utils import today_timezone
+from report.time_utils import today_timezone
 
 LOG_DIR = Path("data/logs")
 
