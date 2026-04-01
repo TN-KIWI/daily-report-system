@@ -1,68 +1,149 @@
 # daily-report-system
 
-Pythonで日報を扱うCLIベースの最小プロジェクトです。
-今回は初期構造のみを作成し、実処理は今後追加していきます。
+Pythonで日報を扱うCLIベースのシンプルなツールです。
+手動入力とGitログを統合して、日報を生成します。
+
+---
 
 ## 概要
-- `init`: 初期化の入口コマンド
-- `add`: 日報エントリ追加の入口コマンド
-- `generate`: レポート生成の入口コマンド
 
-## 使い方
-### Windows（pyランチャー）
+* `add`: 日報エントリを手動追加
+* `generate`: 日報を生成
+* `git-log`: 当日のGitコミットを確認（デバッグ用）
+
+---
+
+## 特徴
+
+* 手動入力とGitログを統合
+* 複数リポジトリ対応
+* シンプルなCLI設計
+* ローカル実行前提（自動化なし）
+
+---
+
+## セットアップ
+
+特別なセットアップは不要です。
 
 ```bash
 py src/main.py --help
-py src/main.py init
-py src/main.py add --section done --project SampleProject "タスクAを完了"
-py src/main.py generate
 ```
 
-### macOS / Linux（python3）
+---
 
-```bash
-python3 src/main.py --help
-python3 src/main.py init
-python3 src/main.py add --section done --project SampleProject "タスクAを完了"
-python3 src/main.py generate
-```
+## 使い方
 
-## ディレクトリ
-- `src/`: CLI本体とモジュール
-- `data/logs/`: 生ログ保存先
-- `reports/`: 生成レポート保存先
-- `tests/`: テストコード
+### 1. 作業内容を記録
 
-## 現在の運用フロー
-1. `add` コマンドで当日の作業内容を記録します。
-2. `generate` コマンドで当日分の Markdown 日報を生成します。
-3. push をきっかけに GitHub Actions が実行されます。
-4. Actions 内で `python src/main.py generate` を実行し、生成した日報を Dropbox にアップロードします。
-5. Dropbox 上の journal ファイルを Logseq から参照します。
-
-## 現在の入出力
-### 入力
-- `data/logs/YYYY-MM-DD.json`
-- `add` コマンドで追記されます
-
-### 出力
-- `reports/YYYY_MM_DD.md`
-- GitHub Actions ではこのファイルを Dropbox にアップロードします
-- Dropbox 上では `target-path` で指定した journal パスに保存されます
-
-## 日報の追加例
 ```bash
 py src/main.py add --section done --project api "認証処理を修正"
 py src/main.py add --section issue --project api "テスト不足"
 py src/main.py add --section next --project api "認証テストを追加"
-py src/main.py add --section memo --project daily-report-system "Dropbox連携を確認"
+py src/main.py add --section memo --project daily-report-system "Git統合を確認"
 ```
 
-## GitHub Actions（Dropbox連携）
-- `.github/workflows/upload-logseq.yml` は push 時に `python src/main.py generate` を実行し、当日分の `logseq/journals/YYYY_MM_DD.md` を Dropbox にアップロードします。
-- `target-path` は仮で `/logseq/Logseq_graph/journals/` を使っています。自分の Dropbox 上の Logseq journals パスに合わせて変更してください。
+---
 
-## GitHub Secrets
-- `DROPBOX_APP_KEY`
-- `DROPBOX_APP_SECRET`
-- `DROPBOX_REFRESH_TOKEN`
+### 2. 日報を生成
+
+```bash
+py src/main.py generate
+```
+
+---
+
+### 3. Gitログ確認（任意）
+
+```bash
+py src/main.py git-log
+```
+
+---
+
+## Gitログの統合
+
+日報にはGitのコミットメッセージが自動で含まれます。
+
+* 当日のコミットのみ取得
+* `done` セクションに追加される
+* プロジェクト名はハッシュタグで付与される
+
+例:
+
+```md
+- #api feat: add login
+- #daily-report-system fix: timezone bug
+```
+
+---
+
+## リポジトリ設定
+
+対象のGitリポジトリは `config/repos.json` で管理します。
+
+### 例
+
+```json
+{
+  "repos": [
+    ".",
+    "C:/dev/api",
+    "C:/dev/project-a"
+  ]
+}
+```
+
+* `"."` はこのプロジェクト
+* 複数リポジトリをまとめて日報に反映可能
+
+---
+
+## 日報の構造
+
+日報は以下のセクションで構成されます。
+
+* `done`: 今日やったこと（Gitログ + 手動入力）
+* `issue`: 課題
+* `next`: 次にやること
+* `memo`: メモ
+
+---
+
+## ディレクトリ構成
+
+* `src/`: CLI本体
+* `data/logs/`: 手動入力ログ
+* `reports/`: 生成された日報
+* `config/`: 設定ファイル
+
+---
+
+## ルール
+
+* Gitログは「事実」として扱う
+* 手動入力は「補完」として扱う
+* Gitログと同じ内容は手動で書かない
+* シンプルな構成を保つ（過剰な抽象化をしない）
+
+---
+
+## 開発方針
+
+* 小さく作る
+* ローカルで動かす
+* 必要になってから拡張する
+
+---
+
+## 今後の拡張案
+
+* repo設定の柔軟化
+* 重複防止（commit hashベース）
+* 出力フォーマットの拡張
+
+---
+
+## ライセンス
+
+MIT
