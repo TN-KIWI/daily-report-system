@@ -6,4 +6,3 @@ free.txt
 data/logs/*.json
 .codex/
 config/repos.json
-tests

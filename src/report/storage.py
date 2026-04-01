@@ -1,6 +1,6 @@
 import sqlite3
 from pathlib import Path
-from report.time_utils import now
+from report.time_utils import now, today_timezone
 
 DB_PATH = Path("data/report.db")
 
@@ -54,6 +54,8 @@ def load_entries():
         ).fetchall()
 
     return {
+        
+        "date": today_timezone().isoformat(),
         "entries": [
             {
                 "project": row["project"],
