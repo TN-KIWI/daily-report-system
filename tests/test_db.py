@@ -1,5 +1,4 @@
 import sys
-import tempfile
 from pathlib import Path
 
 
@@ -51,3 +50,32 @@ def test_created_at_exists(tmp_path):
 
     assert "created_at" in entry
     assert entry["created_at"] is not None
+
+
+def test_load_entries_with_datetime_range(tmp_path):
+    setup_temp_db(tmp_path)
+    storage.init_storage()
+
+    with storage._connect() as conn:
+        conn.executemany(
+            """
+            INSERT INTO entries (project, section, text, created_at)
+            VALUES (?, ?, ?, ?)
+            """,
+            [
+                ("api", "done", "before", "2026-04-01T04:59:00+09:00"),
+                ("api", "done", "inside", "2026-04-01T05:00:00+09:00"),
+                ("api", "done", "after", "2026-04-02T05:00:00+09:00"),
+            ],
+        )
+        conn.commit()
+
+    data = storage.load_entries(
+        from_dt="2026-04-01T05:00:00+09:00",
+        to_dt="2026-04-02T04:59:00+09:00",
+    )
+
+    entries = data["entries"]
+
+    assert len(entries) == 1
+    assert entries[0]["text"] == "inside"

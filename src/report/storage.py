@@ -1,6 +1,6 @@
 import sqlite3
 from pathlib import Path
-from report.time_utils import now, today_timezone
+from report.time_utils import now, parse_iso_datetime, today_timezone
 
 DB_PATH = Path("data/report.db")
 
@@ -42,20 +42,33 @@ def add_entry(entry):
         conn.commit()
 
 
-def load_entries():
+def load_entries(from_dt: str | None = None, to_dt: str | None = None):
     init_storage()
+
+    if bool(from_dt) != bool(to_dt):
+        raise ValueError("from_dt and to_dt must be provided together")
+
+    query = """
+        SELECT project, section, text, created_at
+        FROM entries
+    """
+    params = []
+
+    if from_dt and to_dt:
+        query += " WHERE created_at >= ? AND created_at <= ?"
+        params.extend([from_dt, to_dt])
+
+    query += " ORDER BY created_at ASC, id ASC"
+
     with _connect() as conn:
-        rows = conn.execute(
-            """
-            SELECT project, section, text, created_at
-            FROM entries
-            ORDER BY created_at ASC, id ASC
-            """
-        ).fetchall()
+        rows = conn.execute(query, params).fetchall()
+
+    report_date = today_timezone().isoformat()
+    if from_dt:
+        report_date = parse_iso_datetime(from_dt).date().isoformat()
 
     return {
-        
-        "date": today_timezone().isoformat(),
+        "date": report_date,
         "entries": [
             {
                 "project": row["project"],

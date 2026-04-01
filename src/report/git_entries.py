@@ -14,8 +14,12 @@ def messages_to_entries(repo_path: str | Path, messages: list[str]) -> list[dict
 
 
 def load_today_git_entries() -> list[dict]:
+    return load_git_entries()
+
+
+def load_git_entries(from_dt: str | None = None, to_dt: str | None = None) -> list[dict]:
     entries = []
     for repo_path in load_repo_paths():
-        messages = git_reader.get_today_commit_messages(repo_path)
+        messages = git_reader.get_commit_messages(repo_path, from_dt=from_dt, to_dt=to_dt)
         entries.extend(messages_to_entries(repo_path, messages))
     return entries
