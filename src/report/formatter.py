@@ -27,7 +27,7 @@ def generate_markdown(entries):
 
     lines = []
     for project in sorted(projects.keys()):
-        lines.append(f"- #{project}")
+        lines.append(f"- #{project} #日報")
         for section in SECTION_ORDER:
             items = projects[project][section]
             if not items:
@@ -39,16 +39,17 @@ def generate_markdown(entries):
 
     return "\n".join(lines).rstrip() + "\n" if lines else ""
 
+def write_daily_report(log_data, output_dir: str | None = None, filename: str | None = None):
+    report_dir = Path(output_dir) if output_dir else REPORT_DIR
+    report_dir.mkdir(parents=True, exist_ok=True)
 
-def write_daily_report(log_data):
-    report_date = log_data.get("date") or today_timezone().isoformat()
-    file_name = report_date.replace("-", "_") + ".md"
+    report_date = log_data.get("date", today_timezone().isoformat())
+    default_filename = report_date.replace("-", "_") + ".md"
+    report_name = filename if filename else default_filename
 
-    REPORT_DIR.mkdir(parents=True, exist_ok=True)
-    report_path = REPORT_DIR / file_name
+    report_path = report_dir / report_name
 
     content = generate_markdown(log_data.get("entries", []))
     with report_path.open("w", encoding="utf-8") as f:
         f.write(content)
-
     return report_path

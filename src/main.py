@@ -27,6 +27,8 @@ def create_parser():
     generate_parser = subparsers.add_parser("generate", help="Generate a report")
     generate_parser.add_argument("--from", dest="from_dt", help="Start datetime (YYYY-MM-DD HH:MM)")
     generate_parser.add_argument("--to", dest="to_dt", help="End datetime (YYYY-MM-DD HH:MM)")
+    generate_parser.add_argument("--output-dir", help="Output directory for report")
+    generate_parser.add_argument("--filename", help="Output filename for report")
 
     git_log_parser = subparsers.add_parser("git-log", help="Show today's git commit messages")
     git_log_parser.add_argument("--repo", help="Repository path")
@@ -75,7 +77,11 @@ def main():
             log_data = storage.load_entries(from_dt=from_dt, to_dt=to_dt)
             git_log_data = git_entries.load_git_entries(from_dt=from_dt, to_dt=to_dt)
             log_data["entries"] = [*log_data.get("entries", []), *git_log_data]
-            report_path = formatter.write_daily_report(log_data)
+            report_path = formatter.write_daily_report(
+                log_data,
+                output_dir=args.output_dir,
+                filename=args.filename,
+            )
             print(f"report generated: {report_path}")
         except Exception as e:
             print(f"failed to generate report: {e}")
